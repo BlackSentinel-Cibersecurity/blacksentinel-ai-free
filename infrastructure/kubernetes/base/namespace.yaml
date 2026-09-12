@@ -1,0 +1,101 @@
+# BLACKSENTINEL AI — Namespace, config, secrets, RBAC, network policy
+#
+# Trimmed to match the real single-service app: no Neo4j (kg_nodes/kg_edges
+# live in Postgres — see the memory notes), no vector-db (never existed as a
+# service), no istio-injection (no service mesh was ever actually set up —
+# that label alone doesn't configure one and just adds a misleading signal).
+# Added postgres-url, which the app actually requires and the old secret
+# didn't have.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: blacksentinel
+  labels:
+    name: blacksentinel
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blacksentinel-ai-config
+  namespace: blacksentinel
+data:
+  HOST: "0.0.0.0"
+  PORT: "8080"
+  LOG_LEVEL: "info"
+  METRICS_ENABLED: "true"
+  TRACING_ENABLED: "true"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: blacksentinel-secrets
+  namespace: blacksentinel
+type: Opaque
+stringData:
+  redis-url: "redis://blacksentinel-redis:6379"
+  postgres-url: "CHANGE_ME"
+  jwt-secret: "CHANGE_ME_32_CHARS_MINIMUM"
+  encryption-key: "CHANGE_ME_32_CHARS_MINIMUM"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: blacksentinel-ai
+  namespace: blacksentinel
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: blacksentinel-ai-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "configmaps", "secrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: blacksentinel-ai-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: blacksentinel-ai-role
+subjects:
+  - kind: ServiceAccount
+    name: blacksentinel-ai
+    namespace: blacksentinel
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: blacksentinel-network-policy
+  namespace: blacksentinel
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: blacksentinel
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: blacksentinel
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53

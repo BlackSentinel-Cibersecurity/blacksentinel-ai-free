@@ -1,0 +1,37 @@
+{{/*
+values.yaml has configured security.networkPolicy.enabled since this
+chart's first commit, but nothing ever created a NetworkPolicy from it.
+Added, matching infrastructure/kubernetes/base/namespace.yaml's policy.
+*/}}
+{{- if .Values.security.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "blacksentinel-ai.fullname" . }}
+  labels:
+    {{- include "blacksentinel-ai.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "blacksentinel-ai.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+    - to:
+        - podSelector: {}
+{{- end }}

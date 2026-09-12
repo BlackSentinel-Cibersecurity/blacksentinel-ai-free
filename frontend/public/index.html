@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLACKSENTINEL AI - Command Center</title>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Archivo:wght@400;500;600&family=Azeret+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="bs-aurora"></div>
+  <div class="bs-grid-overlay"></div>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <img src="/images/logo.png" alt="BlackSentinel" class="sidebar-logo">
+        <div class="sidebar-brand">
+          <h1>BLACKSENTINEL</h1>
+          <span>Cognitive AI Engine</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Overview</div>
+          <a href="#" class="nav-item active" data-page="dashboard">
+            <i class="fas fa-th-large"></i>
+            Dashboard
+          </a>
+          <a href="#" class="nav-item" data-page="alerts">
+            <i class="fas fa-exclamation-triangle"></i>
+            Alerts
+            <span class="badge" id="alerts-badge">0</span>
+          </a>
+          <a href="#" class="nav-item" data-page="chat">
+            <i class="fas fa-terminal"></i>
+            AI Assistant
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Operations</div>
+          <a href="#" class="nav-item" data-page="agents">
+            <i class="fas fa-robot"></i>
+            Agents
+          </a>
+          <a href="#" class="nav-item" data-page="investigations">
+            <i class="fas fa-search"></i>
+            Investigations
+          </a>
+          <a href="#" class="nav-item" data-page="playbooks">
+            <i class="fas fa-book"></i>
+            Playbooks
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Knowledge</div>
+          <a href="#" class="nav-item" data-page="knowledge">
+            <i class="fas fa-project-diagram"></i>
+            Knowledge Graph
+          </a>
+          <a href="#" class="nav-item" data-page="memory">
+            <i class="fas fa-brain"></i>
+            Memory
+          </a>
+          <a href="#" class="nav-item" data-page="threats">
+            <i class="fas fa-crosshairs"></i>
+            Threat Intel
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Generation</div>
+          <a href="#" class="nav-item" data-page="generative">
+            <i class="fas fa-code"></i>
+            Artifact Generator
+          </a>
+          <a href="#" class="nav-item" data-page="reports">
+            <i class="fas fa-file-alt"></i>
+            Reports
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">System</div>
+          <a href="#" class="nav-item" data-page="models">
+            <i class="fas fa-cube"></i>
+            Models
+          </a>
+          <a href="#" class="nav-item" data-page="settings">
+            <i class="fas fa-cog"></i>
+            Settings
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user" id="btn-logout">
+          <div class="sidebar-avatar">SA</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">SOC Analyst</div>
+            <div class="sidebar-user-role">soc analyst</div>
+          </div>
+          <i class="fas fa-sign-out-alt" style="color: var(--bs-text-muted);"></i>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <button class="btn btn-outline btn-sm" id="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div>
+            <h2 class="header-title" id="page-title">Dashboard</h2>
+            <p class="header-subtitle" id="page-subtitle">Real-time security overview</p>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-status">
+            <span class="dot"></span>
+            <span id="system-status">System Operational</span>
+          </div>
+          <div class="header-actions">
+            <button class="header-btn" title="Notifications">
+              <i class="fas fa-bell"></i>
+              <span class="notification-dot"></span>
+            </button>
+            <button class="header-btn" title="Settings">
+              <i class="fas fa-cog"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="content">
+        <!-- Dashboard Page -->
+        <div class="page active" id="page-dashboard">
+          <div class="dashboard-grid">
+            <div class="card stat-critical">
+              <div class="card-header">
+                <span class="card-title">Critical Alerts</span>
+                <div class="card-icon" style="background: rgba(239, 68, 68, 0.15); color: var(--bs-critical);">
+                  <i class="fas fa-exclamation-circle"></i>
+                </div>
+              </div>
+              <div class="card-value" id="stat-critical">0</div>
+              <div class="card-change negative">
+                <i class="fas fa-arrow-up"></i>
+                <span>Active now</span>
+              </div>
+            </div>
+
+            <div class="card stat-warning">
+              <div class="card-header">
+                <span class="card-title">Warnings</span>
+                <div class="card-icon" style="background: rgba(250, 204, 21, 0.15); color: var(--bs-warning);">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+              </div>
+              <div class="card-value" id="stat-warning">0</div>
+              <div class="card-change">
+                <i class="fas fa-minus"></i>
+                <span>Requires attention</span>
+              </div>
+            </div>
+
+            <div class="card stat-success">
+              <div class="card-header">
+                <span class="card-title">Resolved Today</span>
+                <div class="card-icon" style="background: rgba(34, 197, 94, 0.15); color: var(--bs-success);">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+              </div>
+              <div class="card-value" id="stat-resolved">0</div>
+              <div class="card-change positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>+12% from yesterday</span>
+              </div>
+            </div>
+
+            <div class="card stat-info">
+              <div class="card-header">
+                <span class="card-title">Active Agents</span>
+                <div class="card-icon" style="background: rgba(59, 130, 246, 0.15); color: var(--bs-info);">
+                  <i class="fas fa-robot"></i>
+                </div>
+              </div>
+              <div class="card-value" id="stat-agents">10</div>
+              <div class="card-change">
+                <i class="fas fa-check"></i>
+                <span>All operational</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Severity Mix — real distribution of currently open alerts,
+               computed client-side from the same /alerts fetch the table
+               below uses (see renderSeverityMix() in app.js) -->
+          <div class="chart-container" style="margin-bottom: var(--bs-spacing-lg);">
+            <div class="chart-header">
+              <div>
+                <h3 class="chart-title">Severity Mix</h3>
+                <p style="font-size: .74rem; color: var(--bs-text-tertiary); margin-top: 3px;" id="severity-mix-subtitle">Distribución de severidad</p>
+              </div>
+            </div>
+            <div class="progress" id="severity-mix-bar" style="display: flex;"></div>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;" id="severity-mix-legend"></div>
+          </div>
+
+          <!-- Recent Alerts Table -->
+          <div class="table-container">
+            <div style="padding: var(--bs-spacing-md) var(--bs-spacing-lg); border-bottom: 1px solid var(--bs-border); display: flex; justify-content: space-between; align-items: center;">
+              <h3>Recent Alerts</h3>
+              <button class="btn btn-secondary" onclick="App.navigateTo('alerts')">View All</button>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Severity</th>
+                  <th>Alert</th>
+                  <th>Source</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="alerts-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Alerts Page -->
+        <div class="page" id="page-alerts">
+          <div style="display: flex; justify-content: space-between; margin-bottom: var(--bs-spacing-lg);">
+            <div style="display: flex; gap: var(--bs-spacing-sm);" id="alerts-filter-group">
+              <button class="btn btn-primary" data-severity="all" onclick="App.filterAlerts('all')">All</button>
+              <button class="btn btn-secondary" data-severity="critical" onclick="App.filterAlerts('critical')">Critical</button>
+              <button class="btn btn-secondary" data-severity="high" onclick="App.filterAlerts('high')">High</button>
+              <button class="btn btn-secondary" data-severity="medium" onclick="App.filterAlerts('medium')">Medium</button>
+            </div>
+            <button class="btn btn-primary" id="btn-new-alert"><i class="fas fa-plus"></i> New Alert</button>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Severity</th>
+                  <th>Alert</th>
+                  <th>Source</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="alerts-list"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Chat Page -->
+        <div class="page" id="page-chat">
+          <div class="chat-container">
+            <div class="chat-messages" id="chat-messages">
+              <div class="chat-message">
+                <div class="chat-message-avatar">AI</div>
+                <div class="chat-message-content">
+                  BlackSentinel AI online. I can analyze security events, investigate threats, generate detection rules, and assist with incident response. State your query.
+                </div>
+              </div>
+            </div>
+            <div class="chat-input-container">
+              <input type="text" class="chat-input" id="chat-input" placeholder="Enter security query...">
+              <button class="btn btn-primary" id="chat-send"><i class="fas fa-paper-plane"></i> Send</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agents Page -->
+        <div class="page" id="page-agents">
+          <div class="agents-grid" id="agents-grid"></div>
+        </div>
+
+        <!-- Investigations Page -->
+        <div class="page" id="page-investigations">
+          <div style="display: flex; justify-content: space-between; margin-bottom: var(--bs-spacing-lg);">
+            <div style="display: flex; gap: var(--bs-spacing-sm);">
+              <button class="btn btn-primary">All</button>
+              <button class="btn btn-secondary">Active</button>
+              <button class="btn btn-secondary">Under Review</button>
+              <button class="btn btn-secondary">Completed</button>
+            </div>
+            <button class="btn btn-primary" id="btn-new-investigation"><i class="fas fa-plus"></i> New Investigation</button>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Severity</th>
+                  <th>Status</th>
+                  <th>Assigned To</th>
+                  <th>Created</th>
+                  <th>Findings</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="investigations-list"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Playbooks Page -->
+        <div class="page" id="page-playbooks">
+          <div style="display: flex; justify-content: space-between; margin-bottom: var(--bs-spacing-lg);">
+            <h3>Incident Response Playbooks</h3>
+            <button class="btn btn-primary" id="btn-new-playbook"><i class="fas fa-plus"></i> New Playbook</button>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: var(--bs-spacing-lg);" id="playbooks-grid"></div>
+        </div>
+
+        <!-- Knowledge Graph Page -->
+        <div class="page" id="page-knowledge">
+          <div class="graph-container">
+            <canvas class="graph-canvas" id="knowledge-canvas"></canvas>
+            <div class="graph-controls">
+              <button class="graph-btn" id="graph-zoom-in"><i class="fas fa-plus"></i></button>
+              <button class="graph-btn" id="graph-zoom-out"><i class="fas fa-minus"></i></button>
+              <button class="graph-btn" id="graph-reset"><i class="fas fa-sync"></i></button>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="chart-container">
+              <div class="chart-header">
+                <h3 class="chart-title">Knowledge Graph Statistics</h3>
+              </div>
+              <div class="dashboard-grid">
+                <div class="card stat-accent">
+                  <div class="card-title">Total Nodes</div>
+                  <div class="card-value" id="kg-nodes">0</div>
+                </div>
+                <div class="card stat-info">
+                  <div class="card-title">Total Edges</div>
+                  <div class="card-value" id="kg-edges">0</div>
+                </div>
+                <div class="card stat-success">
+                  <div class="card-title">Entity Types</div>
+                  <div class="card-value" id="kg-types">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Memory Page -->
+        <div class="page" id="page-memory">
+          <div class="memory-layers">
+            <div class="memory-layer" style="--layer-color: var(--bs-orange);">
+              <div class="memory-layer-icon"><i class="fas fa-bolt"></i></div>
+              <div class="memory-layer-name">Immediate</div>
+              <div class="memory-layer-count" id="mem-immediate">0</div>
+              <div class="memory-layer-label">Entries</div>
+            </div>
+            <div class="memory-layer" style="--layer-color: var(--bs-info);">
+              <div class="memory-layer-icon"><i class="fas fa-cogs"></i></div>
+              <div class="memory-layer-name">Operational</div>
+              <div class="memory-layer-count" id="mem-operational">0</div>
+              <div class="memory-layer-label">Entries</div>
+            </div>
+            <div class="memory-layer" style="--layer-color: var(--bs-warning);">
+              <div class="memory-layer-icon"><i class="fas fa-history"></i></div>
+              <div class="memory-layer-name">Historical</div>
+              <div class="memory-layer-count" id="mem-historical">0</div>
+              <div class="memory-layer-label">Entries</div>
+            </div>
+            <div class="memory-layer" style="--layer-color: var(--bs-success);">
+              <div class="memory-layer-icon"><i class="fas fa-building"></i></div>
+              <div class="memory-layer-name">Organizational</div>
+              <div class="memory-layer-count" id="mem-organizational">0</div>
+              <div class="memory-layer-label">Entries</div>
+            </div>
+            <div class="memory-layer" style="--layer-color: var(--bs-orange-bright);">
+              <div class="memory-layer-icon"><i class="fas fa-globe"></i></div>
+              <div class="memory-layer-name">Contextual</div>
+              <div class="memory-layer-count" id="mem-contextual">0</div>
+              <div class="memory-layer-label">Entries</div>
+            </div>
+            <div class="memory-layer" style="--layer-color: var(--bs-critical);">
+              <div class="memory-layer-icon"><i class="fas fa-search"></i></div>
+              <div class="memory-layer-name">Investigation</div>
+              <div class="memory-layer-count" id="mem-investigation">0</div>
+              <div class="memory-layer-label">Entries</div>
+            </div>
+            <div class="memory-layer" style="--layer-color: var(--bs-orange-light);">
+              <div class="memory-layer-icon"><i class="fas fa-fire"></i></div>
+              <div class="memory-layer-name">Incident</div>
+              <div class="memory-layer-count" id="mem-incident">0</div>
+              <div class="memory-layer-label">Entries</div>
+            </div>
+            <div class="memory-layer" style="--layer-color: var(--bs-gray-light);">
+              <div class="memory-layer-icon"><i class="fas fa-comments"></i></div>
+              <div class="memory-layer-name">Conversation</div>
+              <div class="memory-layer-count" id="mem-conversation">0</div>
+              <div class="memory-layer-label">Entries</div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="chart-container">
+              <div class="chart-header">
+                <h3 class="chart-title">Memory Search</h3>
+              </div>
+              <div style="display: flex; gap: var(--bs-spacing-md);">
+                <input type="text" class="form-input" placeholder="Search memory...">
+                <button class="btn btn-primary">Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Threat Intel Page -->
+        <div class="page" id="page-threats">
+          <div style="display: flex; justify-content: space-between; margin-bottom: var(--bs-spacing-lg);">
+            <div style="display: flex; gap: var(--bs-spacing-sm);">
+              <button class="btn btn-primary">All IOCs</button>
+              <button class="btn btn-secondary">IP Addresses</button>
+              <button class="btn btn-secondary">Domains</button>
+              <button class="btn btn-secondary">Hashes</button>
+              <button class="btn btn-secondary">URLs</button>
+            </div>
+            <button class="btn btn-primary" id="btn-new-ioc"><i class="fas fa-plus"></i> Add IOC</button>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Value</th>
+                  <th>Threat</th>
+                  <th>Confidence</th>
+                  <th>Source</th>
+                  <th>First Seen</th>
+                  <th>Last Seen</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="threats-list"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Generative AI Page -->
+        <div class="page" id="page-generative">
+          <div class="tabs">
+            <button class="tab active" data-tab="sigma">Sigma Rules</button>
+            <button class="tab" data-tab="yara">YARA Rules</button>
+            <button class="tab" data-tab="suricata">Suricata</button>
+            <button class="tab" data-tab="kql">KQL Queries</button>
+            <button class="tab" data-tab="scripts">Scripts</button>
+            <button class="tab" data-tab="playbooks">Playbooks</button>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Generate Security Artifact</h3>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea class="form-input" placeholder="Describe what you want to detect or generate..."></textarea>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--bs-spacing-md);">
+              <div class="form-group">
+                <label class="form-label">Type</label>
+                <select class="form-input">
+                  <option>Sigma Rule</option>
+                  <option>YARA Rule</option>
+                  <option>Suricata Rule</option>
+                  <option>KQL Query</option>
+                  <option>PowerShell Script</option>
+                  <option>Bash Script</option>
+                  <option>Python Script</option>
+                  <option>Playbook</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Priority</label>
+                <select class="form-input">
+                  <option>High</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" id="btn-generate"><i class="fas fa-code"></i> Generate</button>
+          </div>
+
+          <div class="mt-4">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Generated Output</h3>
+                <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(document.querySelector('#page-generative pre code').textContent)"><i class="fas fa-copy"></i> Copy</button>
+              </div>
+              <pre style="background: var(--bs-gray-dark); padding: var(--bs-spacing-md); border-radius: var(--bs-radius-md); overflow-x: auto; font-family: var(--bs-font-mono); font-size: 0.85rem; max-height: 400px; overflow-y: auto;"><code>// Generated artifact will appear here
+// Enter a description and click Generate</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reports Page -->
+        <div class="page" id="page-reports">
+          <div style="display: flex; gap: var(--bs-spacing-md); margin-bottom: var(--bs-spacing-lg);">
+            <button class="btn btn-primary" id="btn-ciso-report"><i class="fas fa-file-alt"></i> Generate CISO Report</button>
+            <button class="btn btn-secondary" id="btn-exec-report"><i class="fas fa-building"></i> Executive Summary</button>
+          </div>
+
+          <!-- Most recently generated report, rendered from the real API
+               response (real DB-backed counts, not fabricated numbers) -->
+          <div class="card" id="report-output" hidden style="margin-bottom: var(--bs-spacing-lg);"></div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Report</th>
+                  <th>Type</th>
+                  <th>Generated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <!-- Populated by App.loadReports() from GET /reports. No
+                   generation history is persisted server-side yet, so this
+                   legitimately renders empty until that lands — an honest
+                   empty state beats hardcoded fake rows. -->
+              <tbody id="reports-list"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Models Page -->
+        <div class="page" id="page-models">
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Sentinel LLM</h3>
+                <span class="badge badge-success"><span class="badge-dot"></span> Active</span>
+              </div>
+              <div style="margin: var(--bs-spacing-md) 0;">
+                <div class="flex-between mb-1">
+                  <span class="text-muted">Accuracy</span>
+                  <span>92%</span>
+                </div>
+                <div class="progress"><div class="progress-bar success" style="width: 92%;"></div></div>
+              </div>
+              <div style="font-size: 0.85rem; color: var(--bs-text-muted);">
+                Latency: 450ms | Requests: 15,000
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Threat Classifier</h3>
+                <span class="badge badge-success"><span class="badge-dot"></span> Active</span>
+              </div>
+              <div style="margin: var(--bs-spacing-md) 0;">
+                <div class="flex-between mb-1">
+                  <span class="text-muted">Accuracy</span>
+                  <span>88%</span>
+                </div>
+                <div class="progress"><div class="progress-bar success" style="width: 88%;"></div></div>
+              </div>
+              <div style="font-size: 0.85rem; color: var(--bs-text-muted);">
+                Latency: 50ms | Requests: 50,000
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Anomaly Detector</h3>
+                <span class="badge badge-warning"><span class="badge-dot"></span> Training</span>
+              </div>
+              <div style="margin: var(--bs-spacing-md) 0;">
+                <div class="flex-between mb-1">
+                  <span class="text-muted">Accuracy</span>
+                  <span>75%</span>
+                </div>
+                <div class="progress"><div class="progress-bar warning" style="width: 75%;"></div></div>
+              </div>
+              <div style="font-size: 0.85rem; color: var(--bs-text-muted);">
+                Latency: 120ms | Requests: 8,000
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div class="page" id="page-settings">
+          <div class="card" style="max-width: 600px;">
+            <div class="card-header">
+              <h3 class="card-title">System Configuration</h3>
+            </div>
+            <div class="form-group">
+              <label class="form-label">AI Engine URL</label>
+              <input type="text" class="form-input" value="http://localhost:8080" id="setting-engine-url">
+            </div>
+            <div class="form-group">
+              <label class="form-label">WebSocket URL</label>
+              <input type="text" class="form-input" value="ws://localhost:8080/ws" id="setting-ws-url">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Refresh Interval (ms)</label>
+              <input type="number" class="form-input" value="5000" id="setting-refresh">
+            </div>
+            <button class="btn btn-primary" id="btn-save-settings"><i class="fas fa-save"></i> Save Settings</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- New Alert Modal -->
+  <div class="modal-overlay" id="new-alert-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Create New Alert</h2>
+        <button class="modal-close" id="close-alert-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="alert-form">
+          <div class="form-group">
+            <label class="form-label" for="alert-title">Alert Title *</label>
+            <input type="text" id="alert-title" class="form-input" placeholder="Brief description of the alert" required>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--bs-spacing-md);">
+            <div class="form-group">
+              <label class="form-label" for="alert-severity">Severity *</label>
+              <select id="alert-severity" class="form-input" required>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium" selected>Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="alert-source">Source</label>
+              <select id="alert-source" class="form-input">
+                <option>SIEM</option>
+                <option>EDR</option>
+                <option>Manual</option>
+                <option>Threat Intel</option>
+                <option>Vulnerability Scanner</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="alert-description">Description</label>
+            <textarea id="alert-description" class="form-input" placeholder="Detailed description of the alert..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-alert">Cancel</button>
+        <button class="btn btn-primary" id="submit-alert">Create Alert</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Investigation Modal -->
+  <div class="modal-overlay" id="new-investigation-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Create New Investigation</h2>
+        <button class="modal-close" id="close-investigation-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="investigation-form">
+          <div class="form-group">
+            <label class="form-label" for="investigation-title">Investigation Title *</label>
+            <input type="text" id="investigation-title" class="form-input" placeholder="Brief description" required>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--bs-spacing-md);">
+            <div class="form-group">
+              <label class="form-label" for="investigation-severity">Severity *</label>
+              <select id="investigation-severity" class="form-input" required>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium" selected>Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="investigation-assigned">Assigned To</label>
+              <select id="investigation-assigned" class="form-input">
+                <option>SOC Team</option>
+                <option>Threat Hunter</option>
+                <option>Identity Team</option>
+                <option>Cloud Team</option>
+                <option>Malware Team</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="investigation-description">Description</label>
+            <textarea id="investigation-description" class="form-input" placeholder="Detailed description..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-investigation">Cancel</button>
+        <button class="btn btn-primary" id="submit-investigation">Create Investigation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Playbook Modal -->
+  <div class="modal-overlay" id="new-playbook-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Create New Playbook</h2>
+        <button class="modal-close" id="close-playbook-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="playbook-form">
+          <div class="form-group">
+            <label class="form-label" for="playbook-name">Playbook Name *</label>
+            <input type="text" id="playbook-name" class="form-input" placeholder="e.g., Ransomware Response" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="playbook-description">Description</label>
+            <textarea id="playbook-description" class="form-input" placeholder="Describe the purpose of this playbook..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="playbook-trigger">Trigger Condition</label>
+            <select id="playbook-trigger" class="form-input">
+              <option>Critical Alert</option>
+              <option>High Severity Alert</option>
+              <option>Specific Alert Type</option>
+              <option>Manual Activation</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-playbook">Cancel</button>
+        <button class="btn btn-primary" id="submit-playbook">Create Playbook</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New IOC Modal -->
+  <div class="modal-overlay" id="new-ioc-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Add New IOC</h2>
+        <button class="modal-close" id="close-ioc-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="ioc-form">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--bs-spacing-md);">
+            <div class="form-group">
+              <label class="form-label" for="ioc-type">IOC Type *</label>
+              <select id="ioc-type" class="form-input" required>
+                <option value="ip">IP Address</option>
+                <option value="domain">Domain</option>
+                <option value="hash">Hash (MD5/SHA)</option>
+                <option value="url">URL</option>
+                <option value="email">Email</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ioc-value">Value *</label>
+              <input type="text" id="ioc-value" class="form-input" placeholder="e.g., 192.168.1.100" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ioc-threat">Threat Type</label>
+            <select id="ioc-threat" class="form-input">
+              <option>C2 Server</option>
+              <option>Command & Control</option>
+              <option>Malware</option>
+              <option>Phishing</option>
+              <option>Threat Actor</option>
+              <option>Exploit</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ioc-description">Description</label>
+            <textarea id="ioc-description" class="form-input" placeholder="Additional context..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-ioc">Cancel</button>
+        <button class="btn btn-primary" id="submit-ioc">Add IOC</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/app.js"></script>
+</body>
+</html>

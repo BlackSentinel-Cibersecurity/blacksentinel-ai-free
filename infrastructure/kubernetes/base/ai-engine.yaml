@@ -1,0 +1,148 @@
+# BLACKSENTINEL AI — Kubernetes Deployment
+#
+# This used to be 4 separate Deployments (ai-engine, agent-orchestrator,
+# knowledge-graph, memory-service in services.yaml, now deleted) each
+# expecting a *different* Docker image (blacksentinel/agent-orchestrator,
+# blacksentinel/knowledge-graph, ...). None of those images has ever been
+# built by anything — the CI/CD pipeline (.github/workflows/ci-cd.yml)
+# builds exactly one image, from infrastructure/docker/Dockerfile, and it's
+# the same single Express monolith regardless of what these manifests
+# implied. Consolidated to one Deployment matching what actually runs.
+# image: replace <GHCR_OWNER> with the real GitHub org/user — CI pushes to
+# ghcr.io/<owner>/<repo>, which `docker/metadata-action` resolves from
+# ${{ github.repository }}.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blacksentinel-ai
+  namespace: blacksentinel
+  labels:
+    app: blacksentinel-ai
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: blacksentinel-ai
+  template:
+    metadata:
+      labels:
+        app: blacksentinel-ai
+    spec:
+      serviceAccountName: blacksentinel-ai
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: blacksentinel-ai
+          image: ghcr.io/<GHCR_OWNER>/blacksentinel-ai:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: blacksentinel-ai-config
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: blacksentinel-secrets
+                  key: redis-url
+            - name: POSTGRES_URL
+              valueFrom:
+                secretKeyRef:
+                  name: blacksentinel-secrets
+                  key: postgres-url
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: blacksentinel-secrets
+                  key: jwt-secret
+            - name: ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: blacksentinel-secrets
+                  key: encryption-key
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2000m"
+              memory: "4Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: blacksentinel-ai
+                topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blacksentinel-ai
+  namespace: blacksentinel
+spec:
+  selector:
+    app: blacksentinel-ai
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: blacksentinel-ai-hpa
+  namespace: blacksentinel
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: blacksentinel-ai
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 120

@@ -1,0 +1,144 @@
+# BLACKSENTINEL AI - Docker Compose (Full Stack)
+# Run: docker compose up -d
+
+services:
+  # ============================================================================
+  # INFRASTRUCTURE
+  # ============================================================================
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - blacksentinel
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: blacksentinel
+      POSTGRES_USER: bsadmin
+      POSTGRES_PASSWORD: blacksentinel
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bsadmin -d blacksentinel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - blacksentinel
+
+  # ============================================================================
+  # APPLICATION SERVICE
+  # ============================================================================
+  # NOTE: this used to be 4 separate "microservices" (ai-engine,
+  # agent-orchestrator, knowledge-graph, memory-service) that all built the
+  # same Dockerfile.simple image and ran the exact same entrypoint
+  # (src/server/index.ts) on different ports — none of them ran different
+  # code, so it was 4x the resource cost for zero extra functionality.
+  # There used to be a packages/ directory with per-domain code
+  # (ai-engine, agent-orchestrator, etc.) that none of this ever imported —
+  # deleted as dead code. If a real service split happens later, start from
+  # src/server's actual routes/services instead of resurrecting it.
+
+  ai-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: development
+      PORT: 8080
+      REDIS_URL: redis://redis:6379
+      POSTGRES_URL: postgresql://bsadmin:blacksentinel@postgres:5432/blacksentinel
+      JWT_SECRET: blacksentinel-jwt-secret-minimum-32-characters-long
+      ENCRYPTION_KEY: blacksentinel-encryption-key-minimum-32-characters
+      LOG_LEVEL: info
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - blacksentinel
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ============================================================================
+  # FRONTEND - Command Center UI
+  # ============================================================================
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      AI_ENGINE_URL: http://ai-engine:8080
+    depends_on:
+      ai-engine:
+        condition: service_healthy
+    networks:
+      - blacksentinel
+
+  # ============================================================================
+  # MONITORING
+  # ============================================================================
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infrastructure/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - blacksentinel
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: blacksentinel
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - blacksentinel
+
+# ============================================================================
+# VOLUMES
+# ============================================================================
+
+volumes:
+  redis_data:
+  postgres_data:
+  grafana_data:
+
+# ============================================================================
+# NETWORKS
+# ============================================================================
+
+networks:
+  blacksentinel:
+    driver: bridge
