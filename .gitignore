@@ -1,0 +1,17 @@
+node_modules
+dist
+build
+coverage
+*.log
+.DS_Store
+._*
+.env
+.env.local
+graphify-out/
+
+# Terraform — .terraform.lock.hcl is deliberately NOT ignored, commit it
+# for reproducible provider versions.
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info

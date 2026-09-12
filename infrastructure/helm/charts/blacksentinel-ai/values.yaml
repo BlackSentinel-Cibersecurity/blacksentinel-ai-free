@@ -1,0 +1,110 @@
+# BLACKSENTINEL AI — Helm values
+#
+# Previously declared replica counts and resource limits for aiEngine,
+# agentOrchestrator, knowledgeGraph, memoryService, observability, gateway
+# as if they were six independently deployed services — the templates
+# directory only ever had one Deployment template, and that one built an
+# image path ("<repo>/ai-engine:<tag>") nothing ever published. There's one
+# real service. Trimmed to match it.
+
+replicaCount: 3
+
+image:
+  # Real image: what .github/workflows/ci-cd.yml actually builds and
+  # pushes, from infrastructure/docker/Dockerfile.
+  repository: ghcr.io/<GHCR_OWNER>/blacksentinel-ai
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+# Brand Colors (from logo) — not consumed by any template yet; kept for
+# whichever dashboard/status-page template eventually wants them.
+brand:
+  colors:
+    black:
+      deep: "#0B0B0B"
+      secondary: "#141414"
+    gray:
+      dark: "#232323"
+      medium: "#3C3C3C"
+      light: "#D9D9D9"
+    white: "#FFFFFF"
+    orange:
+      primary: "#FF6B00"
+      bright: "#FF8C1A"
+      dark: "#CC5500"
+      light: "#FF9933"
+    status:
+      critical: "#EF4444"
+      success: "#22C55E"
+      info: "#3B82F6"
+      warning: "#FACC15"
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: app.blacksentinel.ai
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: blacksentinel-ai-tls
+      hosts:
+        - app.blacksentinel.ai
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilization: 70
+  targetMemoryUtilization: 80
+
+# Secrets the app actually requires (see shared/utils/config.ts). Override
+# every one of these at install time rather than editing this file:
+#   helm install ... --set secrets.jwtSecret=$(openssl rand -base64 48)
+# A real deployment should source these from an external secrets manager
+# instead — see templates/secret.yaml.
+secrets:
+  redisUrl: "redis://blacksentinel-ai-redis-master:6379"
+  postgresUrl: "CHANGE_ME"
+  jwtSecret: "CHANGE_ME_32_CHARS_MINIMUM"
+  encryptionKey: "CHANGE_ME_32_CHARS_MINIMUM"
+
+redis:
+  enabled: true
+  auth:
+    enabled: true
+    password: "CHANGE_ME"
+
+postgresql:
+  # Set to false and point secrets.postgresUrl at a managed database
+  # (RDS/Cloud SQL/etc.) for anything beyond a demo install.
+  enabled: true
+  auth:
+    postgresPassword: "CHANGE_ME"
+    database: blacksentinel
+
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+
+security:
+  networkPolicy:
+    enabled: true
+  serviceAccount:
+    create: true

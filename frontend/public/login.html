@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLACKSENTINEL AI - Login</title>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Archivo:wght@400;500;600&family=Azeret+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="bs-aurora"></div>
+  <div class="login-page">
+
+    <section class="login-brand">
+      <header class="login-brand-header">
+        <img src="/images/logo.png" alt="BlackSentinel">
+        <div>
+          <div class="name">BLACKSENTINEL</div>
+          <div class="tag">Cognitive AI Engine</div>
+        </div>
+      </header>
+
+      <div class="login-hero">
+        <div class="login-status-pill"><span class="dot"></span> System Operational</div>
+        <h1>The cognitive brain of the <span>BlackSentinel</span> ecosystem</h1>
+        <p>Reasoning, decision, memory, knowledge and perception layers running as one engine.</p>
+        <p>Razonamiento, decisión, memoria, conocimiento y percepción operando como un solo motor.</p>
+      </div>
+
+      <div class="login-stats">
+        <div><div class="num">10</div><div class="label">Agents</div></div>
+        <div><div class="num">8</div><div class="label">Memory layers</div></div>
+        <div><div class="num">18</div><div class="label">Packages</div></div>
+      </div>
+    </section>
+
+    <section class="login-panel">
+      <div class="login-container">
+        <div class="login-card">
+          <div class="login-header">
+            <div class="login-eyebrow">Secure Access</div>
+            <h2 class="login-title">Sign in</h2>
+            <p class="login-subtitle">Cyber Cognitive Intelligence Engine · Acceso restringido</p>
+          </div>
+
+          <div class="login-error" id="login-error" role="alert"></div>
+
+          <form class="login-form" id="login-form">
+            <div class="form-group">
+              <label class="login-field-row" for="email">
+                <span class="form-label" style="margin: 0;">Email Address</span>
+                <span class="es">Correo</span>
+              </label>
+              <input type="email" id="email" class="form-input" placeholder="analyst@blacksentinel.ai" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+              <label class="login-field-row" for="password">
+                <span class="form-label" style="margin: 0;">Password</span>
+                <span class="es">Contraseña</span>
+              </label>
+              <div class="login-pw-wrap">
+                <input type="password" id="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password" style="padding-right: 54px;">
+                <button type="button" class="login-pw-toggle" id="toggle-pw" aria-label="Show password">SHOW</button>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+              <label class="form-checkbox">
+                <input type="checkbox" id="remember">
+                Remember me
+              </label>
+              <a href="#" style="font-size: .82rem;">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-login" id="btn-login">
+              <span id="btn-login-label">Sign In</span>
+            </button>
+          </form>
+
+          <div class="divider"><span>or</span></div>
+
+          <div class="register-link">
+            Don't have an account?
+            <a href="#" id="show-register">Request Access</a>
+          </div>
+        </div>
+
+        <div class="login-footnote">
+          <span>AES-256</span><span class="sep">/</span><span>SSO Ready</span><span class="sep">/</span><span>SOC 2</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="login-page-footer">Blacksentinel Tech · Cyber Cognitive Intelligence Engine</div>
+
+  <!-- Register Modal -->
+  <div class="modal-overlay" id="register-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Request Access</h2>
+          <p class="login-subtitle" style="margin-top: 4px;">Solicitud de acceso · revisada por el equipo de seguridad</p>
+        </div>
+        <button class="modal-close" id="close-register" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="register-form">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: var(--bs-spacing-md);">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="reg-firstname">First Name</label>
+              <input type="text" id="reg-firstname" class="form-input" placeholder="John" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="reg-lastname">Last Name</label>
+              <input type="text" id="reg-lastname" class="form-input" placeholder="Doe" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Work Email</label>
+            <input type="email" id="reg-email" class="form-input" placeholder="john.doe@company.com" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: var(--bs-spacing-md); margin-bottom: var(--bs-spacing-lg);">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="reg-role">Role</label>
+              <select id="reg-role" class="form-input" required>
+                <option value="">Select your role</option>
+                <option value="ciso">CISO</option>
+                <option value="security_director">Security Director</option>
+                <option value="soc_manager">SOC Manager</option>
+                <option value="soc_analyst">SOC Analyst</option>
+                <option value="threat_hunter">Threat Hunter</option>
+                <option value="incident_responder">Incident Responder</option>
+                <option value="viewer">Viewer</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="reg-company">Company</label>
+              <input type="text" id="reg-company" class="form-input" placeholder="Your organization" required>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: var(--bs-spacing-md);">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="reg-password">Password</label>
+              <input type="password" id="reg-password" class="form-input" placeholder="Create a password" required minlength="8">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="reg-confirm">Confirm Password</label>
+              <input type="password" id="reg-confirm" class="form-input" placeholder="Confirm your password" required>
+            </div>
+          </div>
+
+          <label class="form-checkbox" style="align-items: flex-start; margin-top: var(--bs-spacing-lg);">
+            <input type="checkbox" id="reg-terms" required style="margin-top: 2px;">
+            I agree to the Terms of Service and Privacy Policy
+          </label>
+
+          <div class="login-error" id="register-error" role="alert" style="margin-top: var(--bs-spacing-lg); margin-bottom: 0;"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-register" type="button">Cancel</button>
+        <button class="btn btn-primary" id="submit-register" type="button">Submit Request</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    const API_BASE = 'http://localhost:8080/api/v1';
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    const btnLogin = document.getElementById('btn-login');
+    const btnLoginLabel = document.getElementById('btn-login-label');
+
+    function showToast(text, kind) {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      el.className = 'toast toast-' + (kind || 'info');
+      const icon = kind === 'success' ? 'fa-check-circle' : kind === 'error' ? 'fa-circle-exclamation' : kind === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
+      el.innerHTML = '<i class="fas ' + icon + '"></i><span>' + text + '</span>';
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 3800);
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      btnLoginLabel.textContent = 'Signing in…';
+      btnLogin.classList.add('is-loading');
+      btnLogin.disabled = true;
+      loginError.classList.remove('show');
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.token) {
+          localStorage.setItem('bs_token', data.token);
+          localStorage.setItem('bs_user', JSON.stringify(data.user));
+          window.location.href = '/app';
+        } else {
+          loginError.textContent = data.error?.message || 'Invalid email or password. Try: admin@blacksentinel.ai / Admin123!';
+          loginError.classList.add('show');
+          btnLoginLabel.textContent = 'Sign In';
+          btnLogin.classList.remove('is-loading');
+          btnLogin.disabled = false;
+        }
+      } catch (error) {
+        loginError.textContent = 'Unable to connect to server. Please try again.';
+        loginError.classList.add('show');
+        btnLoginLabel.textContent = 'Sign In';
+        btnLogin.classList.remove('is-loading');
+        btnLogin.disabled = false;
+      }
+    });
+
+    // Show/hide password
+    const pwInput = document.getElementById('password');
+    const pwToggle = document.getElementById('toggle-pw');
+    pwToggle.addEventListener('click', () => {
+      const showing = pwInput.type === 'text';
+      pwInput.type = showing ? 'password' : 'text';
+      pwToggle.textContent = showing ? 'SHOW' : 'HIDE';
+      pwToggle.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    });
+
+    // Register modal
+    const registerModal = document.getElementById('register-modal');
+    const showRegister = document.getElementById('show-register');
+    const closeRegister = document.getElementById('close-register');
+    const cancelRegister = document.getElementById('cancel-register');
+    const submitRegister = document.getElementById('submit-register');
+    const registerError = document.getElementById('register-error');
+
+    showRegister.addEventListener('click', (e) => {
+      e.preventDefault();
+      registerModal.classList.add('active');
+    });
+
+    [closeRegister, cancelRegister].forEach(btn => btn.addEventListener('click', () => {
+      registerModal.classList.remove('active');
+    }));
+
+    registerModal.addEventListener('click', (e) => {
+      if (e.target === registerModal) registerModal.classList.remove('active');
+    });
+
+    submitRegister.addEventListener('click', async () => {
+      const form = document.getElementById('register-form');
+      registerError.classList.remove('show');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const password = document.getElementById('reg-password').value;
+      const confirm = document.getElementById('reg-confirm').value;
+
+      if (password !== confirm) {
+        registerError.textContent = 'Passwords do not match.';
+        registerError.classList.add('show');
+        return;
+      }
+
+      submitRegister.classList.add('is-loading');
+      submitRegister.disabled = true;
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('reg-email').value,
+            password: password,
+            name: `${document.getElementById('reg-firstname').value} ${document.getElementById('reg-lastname').value}`,
+            role: document.getElementById('reg-role').value,
+            company: document.getElementById('reg-company').value,
+            tenantId: 'default',
+          }),
+        });
+
+        const data = await response.json();
+
+        submitRegister.classList.remove('is-loading');
+        submitRegister.disabled = false;
+
+        if (response.ok) {
+          registerModal.classList.remove('active');
+          form.reset();
+          showToast('Account created. You can now sign in with your credentials.', 'success');
+        } else {
+          registerError.textContent = data.error?.message || 'Registration failed. Please try again.';
+          registerError.classList.add('show');
+        }
+      } catch (error) {
+        submitRegister.classList.remove('is-loading');
+        submitRegister.disabled = false;
+        registerError.textContent = 'Unable to connect to server. Please try again.';
+        registerError.classList.add('show');
+      }
+    });
+
+    // Check if already logged in
+    if (localStorage.getItem('bs_token')) {
+      window.location.href = '/app';
+    }
+  </script>
+</body>
+</html>

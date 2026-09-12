@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF8C1A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B00;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grayGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3C3C3C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#232323;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="31" fill="#0B0B0B" stroke="url(#orangeGrad)" stroke-width="2"/>
+  
+  <!-- Shield left (gray) -->
+  <path d="M32 10 L18 18 L18 34 L32 50 L32 10Z" fill="url(#grayGrad)"/>
+  
+  <!-- Shield right (orange) -->
+  <path d="M32 10 L46 18 L46 34 L32 50 L32 10Z" fill="url(#orangeGrad)"/>
+  
+  <!-- Helmet visor -->
+  <path d="M24 22 L32 18 L40 22 L40 30 L32 34 L24 30 Z" fill="#0B0B0B"/>
+  
+  <!-- Left eye -->
+  <path d="M26 24 L30 22 L30 26 L26 28 Z" fill="#FFFFFF"/>
+  
+  <!-- Right eye -->
+  <path d="M34 24 L38 22 L38 28 L34 26 Z" fill="#0B0B0B"/>
+</svg>
