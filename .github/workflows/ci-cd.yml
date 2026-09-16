@@ -79,6 +79,11 @@ jobs:
           JWT_SECRET: test-jwt-secret-minimum-32-characters-long-ok
           ENCRYPTION_KEY: test-encryption-key-minimum-32-characters-ok
 
+      - name: Run database migrations
+        run: npx tsx src/database/migrate.ts
+        env:
+          POSTGRES_URL: postgresql://test:test@localhost:5432/blacksentinel_test
+
       - name: Run integration tests
         run: npm run test:integration
         env:
