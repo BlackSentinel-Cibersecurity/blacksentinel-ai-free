@@ -65,6 +65,7 @@ describe('POST /api/v1/agents/threat_hunter/process', () => {
   });
 
   it('flags an IOC match between an alert and a known indicator', async () => {
+    mockedQuery.mockResolvedValueOnce({ rows: [{ count: '0' }] }); // free-plan monthly quota check
     mockedQuery.mockResolvedValueOnce({
       rows: [
         { id: 'a1', title: 'Beacon to 45.33.12.9 detected', description: null, severity: 'high', source: 'EDR', created_at: new Date() },
@@ -90,6 +91,7 @@ describe('POST /api/v1/agents/threat_hunter/process', () => {
     const burst = Array.from({ length: 4 }, (_, i) => ({
       id: `a${i}`, title: `Alert ${i}`, description: null, severity: 'medium', source: 'firewall-01', created_at: new Date(),
     }));
+    mockedQuery.mockResolvedValueOnce({ rows: [{ count: '0' }] }); // free-plan monthly quota check
     mockedQuery.mockResolvedValueOnce({ rows: burst });
     mockedQuery.mockResolvedValueOnce({ rows: [] }); // no IOCs
     mockedQuery.mockResolvedValueOnce({ rows: [] });
@@ -103,6 +105,7 @@ describe('POST /api/v1/agents/threat_hunter/process', () => {
   });
 
   it('reports a clean hunt when nothing correlates', async () => {
+    mockedQuery.mockResolvedValueOnce({ rows: [{ count: '0' }] }); // free-plan monthly quota check
     mockedQuery.mockResolvedValueOnce({
       rows: [{ id: 'a1', title: 'Benign alert', description: null, severity: 'low', source: 'SIEM', created_at: new Date() }],
     });
