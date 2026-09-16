@@ -95,6 +95,7 @@ describe('POST /api/v1/agents/:agentType/process', () => {
   });
 
   it('reports a clean environment when there are no open alerts', async () => {
+    mockedQuery.mockResolvedValueOnce({ rows: [{ count: '0' }] }); // free-plan monthly quota check
     mockedQuery.mockResolvedValueOnce({
       rows: [{ open_count: 0, critical_count: 0, high_count: 0 }],
     });
@@ -114,6 +115,7 @@ describe('POST /api/v1/agents/:agentType/process', () => {
   });
 
   it('summarizes real open alerts, ranks critical first, and proposes investigate actions', async () => {
+    mockedQuery.mockResolvedValueOnce({ rows: [{ count: '0' }] }); // free-plan monthly quota check
     mockedQuery.mockResolvedValueOnce({
       rows: [{ open_count: 3, critical_count: 1, high_count: 1 }],
     });
@@ -144,12 +146,13 @@ describe('POST /api/v1/agents/:agentType/process', () => {
     expect(body.actions.some((a: any) => a.alertId === 'a3')).toBe(false);
 
     // the exchange should have been persisted (conversation + messages insert)
-    expect(mockedQuery.mock.calls.length).toBe(4);
-    expect(mockedQuery.mock.calls[2][0]).toMatch(/INSERT INTO conversations/);
-    expect(mockedQuery.mock.calls[3][0]).toMatch(/INSERT INTO conversation_messages/);
+    expect(mockedQuery.mock.calls.length).toBe(5);
+    expect(mockedQuery.mock.calls[3][0]).toMatch(/INSERT INTO conversations/);
+    expect(mockedQuery.mock.calls[4][0]).toMatch(/INSERT INTO conversation_messages/);
   });
 
   it('scopes the alert query to the authenticated tenant, not a client-supplied one', async () => {
+    mockedQuery.mockResolvedValueOnce({ rows: [{ count: '0' }] }); // free-plan monthly quota check
     mockedQuery.mockResolvedValueOnce({ rows: [{ open_count: 0, critical_count: 0, high_count: 0 }] });
     mockedQuery.mockResolvedValueOnce({ rows: [] });
 

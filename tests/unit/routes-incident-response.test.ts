@@ -56,6 +56,7 @@ async function callIR(query: string) {
 
 describe('POST /api/v1/agents/incident_response/process', () => {
   it('matches an open critical incident to a playbook by trigger_condition', async () => {
+    mockedQuery.mockResolvedValueOnce({ rows: [{ count: '0' }] }); // free-plan monthly quota check
     mockedQuery.mockResolvedValueOnce({
       rows: [{ id: 'inc1', title: 'Ransomware on file server', severity: 'critical', status: 'open', created_at: new Date(Date.now() - 3 * 3_600_000) }],
     });
@@ -76,6 +77,7 @@ describe('POST /api/v1/agents/incident_response/process', () => {
   });
 
   it('flags an incident with no matching playbook honestly', async () => {
+    mockedQuery.mockResolvedValueOnce({ rows: [{ count: '0' }] }); // free-plan monthly quota check
     mockedQuery.mockResolvedValueOnce({
       rows: [{ id: 'inc1', title: 'Unusual cloud API calls', severity: 'high', status: 'investigating', created_at: new Date() }],
     });
@@ -90,6 +92,7 @@ describe('POST /api/v1/agents/incident_response/process', () => {
   });
 
   it('reports no open incidents honestly', async () => {
+    mockedQuery.mockResolvedValueOnce({ rows: [{ count: '0' }] }); // free-plan monthly quota check
     mockedQuery.mockResolvedValueOnce({ rows: [] });
     mockedQuery.mockResolvedValueOnce({ rows: [] });
 
