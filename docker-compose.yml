@@ -53,6 +53,7 @@ services:
   # src/server's actual routes/services instead of resurrecting it.
 
   ai-engine:
+    image: ghcr.io/blacksentinel-cibersecurity/blacksentinel-ai-free:main
     build:
       context: .
       dockerfile: Dockerfile.simple
