@@ -5,7 +5,11 @@ import { describe, it, expect } from 'vitest';
 
 describe('Adversarial: Prompt Injection', () => {
   const injectionPatterns = [
-    /ignore\s+(previous|all|above)\s+instructions?/i,
+    // Allow filler qualifiers ("all", "previous", "above", etc.) between the
+    // verb and its object — "ignore all previous instructions" has two such
+    // qualifiers and was previously missed because the old pattern only
+    // allowed exactly one word in between.
+    /ignore\s+(?:\w+\s+){0,3}instructions?/i,
     /you\s+are\s+now\s+(a|an|the)/i,
     /pretend\s+to\s+be/i,
     /disregard\s+(previous|all)/i,
@@ -14,7 +18,7 @@ describe('Adversarial: Prompt Injection', () => {
     /\[INST\]/i,
     /<<SYS>>/i,
     /jailbreak/i,
-    /bypass\s+(filter|restriction|safety)/i,
+    /bypass\s+(?:\w+\s+){0,3}(filter|restriction|safety)/i,
     /developer\s+mode/i,
   ];
 
@@ -58,7 +62,10 @@ describe('Adversarial: Sensitive Data Detection', () => {
   const sensitivePatterns = [
     /password\s*[:=]\s*\S+/i,
     /secret\s*[:=]\s*\S+/i,
-    /api[_-]?key\s*[:=]\s*\S+/i,
+    // "API key" is commonly written as two words, not just "api-key"/"api_key" —
+    // the old pattern only allowed a single separator char and missed a bare
+    // space, letting "Use this API key: sk-..." through undetected.
+    /api[\s_-]?key\s*[:=]\s*\S+/i,
     /token\s*[:=]\s*\S+/i,
     /BEGIN\s+(RSA|DSA|EC)?\s*PRIVATE\s+KEY/,
   ];
@@ -121,7 +128,11 @@ describe('Adversarial: Input Validation', () => {
 
     for (const input of malformedInputs) {
       const containsHtml = /<[^>]*>/.test(input);
-      const containsTemplate = /\{\{.*\}\}/.test(input);
+      // Catch both `{{...}}` (Handlebars/Jinja2/Angular-style) and `${...}`
+      // (JS template literals, JSP/Freemarker EL) template-injection syntax —
+      // the old pattern only matched the double-curly form and let a classic
+      // `${7*7}` SSTI probe straight through.
+      const containsTemplate = /\{\{.*\}\}|\$\{.*\}/.test(input);
       const containsPathTraversal = /\.\.\//.test(input);
       const isMalicious = containsHtml || containsTemplate || containsPathTraversal;
       expect(isMalicious).toBe(true);
