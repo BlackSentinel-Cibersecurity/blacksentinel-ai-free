@@ -9,14 +9,13 @@
 > logic; every other agent type already refuses with a clear "not
 > implemented yet" rather than a fake answer) are usable here, capped at
 > 50 queries per 30 days (`src/server/config/edition.ts`). For unlimited
-> queries, see [blacksentinel.io](https://blacksentinel.io).
+> queries, see [blacksentinel.tech](https://blacksentinel.tech).
 
 ### Cyber Cognitive Intelligence Engine
 
 **The Cognitive Brain of the BlackSentinel Ecosystem**
 
-[![CI/CD](https://github.com/blacksentinel/ai-platform/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/blacksentinel/ai-platform/actions/workflows/ci-cd.yml)
-[![License](https://img.shields.io/badge/license-proprietary-blue)](#license)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
 
 </div>
@@ -27,7 +26,7 @@
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/blacksentinel/ai-platform.git
+git clone https://github.com/BlackSentinel-Cibersecurity/blacksentinel-ai-free.git
 cd ai-platform
 npm install
 
@@ -235,6 +234,19 @@ npm run test:coverage    # Coverage report
 
 ---
 
+## Before you run it
+
+- This is a **technical preview** and the open-source edition of the product. It comes with no warranty and no service-level commitment: try it in a test environment first.
+- It is **self-hosted**. BlackSentinel does not host it for you, and paid plans are not on sale.
+- Change every default credential and secret before exposing anything to a network. Never deploy with the example values from `.env.example` or `.env.production`.
+- Use it only on systems you own or are explicitly authorized to test or monitor. See the [Acceptable Use Policy](https://blacksentinel.tech/acceptable-use/).
+
+## Support
+
+- Bugs and questions: [open an issue](https://github.com/BlackSentinel-Cibersecurity/blacksentinel-ai-free/issues) in this repository.
+- Security reports: follow [security.txt](https://blacksentinel.tech/.well-known/security.txt). Please do not open a public issue for a vulnerability.
+- Everything else: BlackSentinel-tech@protonmail.com
+
 ## License
 
-Proprietary - BlackSentinel AI Platform
+MIT. See [LICENSE](LICENSE). The BlackSentinel name and logo are not covered by the licence.
