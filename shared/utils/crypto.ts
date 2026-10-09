@@ -25,7 +25,7 @@ const TAG_LENGTH = 16;
 
 function requireSecret(envVar: string): string {
   const value = process.env[envVar];
-  if (!value || value.length < 32) {
+  if (!value || value.length < 32 || /change_?me|change|your[-_]|example|placeholder/i.test(value)) {
     throw new Error(
       `${envVar} must be set to a string of at least 32 characters. Refusing to start with a weaker or missing value — there is no built-in fallback.`
     );
