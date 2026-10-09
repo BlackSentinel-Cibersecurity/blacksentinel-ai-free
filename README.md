@@ -27,12 +27,11 @@
 ```bash
 # 1. Clone and install
 git clone https://github.com/BlackSentinel-Cibersecurity/blacksentinel-ai-free.git
-cd ai-platform
+cd blacksentinel-ai-free
 npm install
 
-# 2. Configure environment
-cp .env.example .env
-# Edit .env with your values
+# 2. Generate secrets (.env with random JWT_SECRET, ENCRYPTION_KEY, ADMIN_PASSWORD)
+./scripts/init-env.sh
 
 # 3. Start with Docker Compose
 docker compose up -d
@@ -40,6 +39,10 @@ docker compose up -d
 # 4. Verify
 curl http://localhost:8080/health
 ```
+
+Sign in as `admin@blacksentinel.ai` with the `ADMIN_PASSWORD` that `init-env.sh`
+printed (it is also in `.env`). There are no published default credentials; the
+engine creates the tables and this first admin on its first start.
 
 ---
 
@@ -153,6 +156,7 @@ curl http://localhost:8080/health
 
 ### Local Development
 ```bash
+./scripts/init-env.sh
 docker compose up -d
 ```
 

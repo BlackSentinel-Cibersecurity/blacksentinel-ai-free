@@ -9,7 +9,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
@@ -24,7 +24,7 @@ services:
   postgres:
     image: postgres:16-alpine
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
@@ -64,8 +64,11 @@ services:
       PORT: 8080
       REDIS_URL: redis://redis:6379
       POSTGRES_URL: postgresql://bsadmin:blacksentinel@postgres:5432/blacksentinel
-      JWT_SECRET: blacksentinel-jwt-secret-minimum-32-characters-long
-      ENCRYPTION_KEY: blacksentinel-encryption-key-minimum-32-characters
+      # SECURITY FIX: these were fixed strings written right here. They now come
+      # from .env; run ./scripts/init-env.sh once to generate them.
+      JWT_SECRET: ${JWT_SECRET:?Run ./scripts/init-env.sh to generate secrets}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?Run ./scripts/init-env.sh to generate secrets}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
       LOG_LEVEL: info
     depends_on:
       redis:
@@ -108,7 +111,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     ports:
-      - "9090:9090"
+      - "127.0.0.1:9090:9090"
     volumes:
       - ./infrastructure/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
@@ -117,7 +120,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     ports:
-      - "3001:3000"
+      - "127.0.0.1:3001:3000"
     environment:
       GF_SECURITY_ADMIN_PASSWORD: blacksentinel
     volumes:

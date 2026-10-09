@@ -40,6 +40,7 @@ import { corsOptions } from './middleware/cors';
 import { brandContext } from './middleware/brand';
 import { BRAND } from '@blacksentinel/shared/constants/brand';
 import { pool } from './db';
+import { bootstrapDatabase } from './bootstrap';
 import { redis } from './redis';
 
 // ============================================================================
@@ -251,6 +252,9 @@ async function start() {
   try {
     // Initialize metrics
     await initializeMetrics();
+
+    // Apply the schema and create the first admin on a fresh database
+    await bootstrapDatabase(pool, log);
 
     // Start listening
     httpServer.listen(config.PORT, config.HOST, () => {
