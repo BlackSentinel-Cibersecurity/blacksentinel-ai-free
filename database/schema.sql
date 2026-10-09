@@ -263,10 +263,9 @@ CREATE INDEX IF NOT EXISTS idx_kg_edges_target ON kg_edges(target_id);
 CREATE INDEX IF NOT EXISTS idx_kg_edges_type ON kg_edges(type);
 
 -- ============================================================================
--- SEED DATA - SUPER ADMIN ONLY
--- Password: Admin123! (bcrypt hash)
+-- FIRST ADMIN
+-- Not seeded here any more: this used to insert admin@blacksentinel.ai with
+-- the published password 'Admin123!'. src/server/bootstrap.ts creates the
+-- first admin on start from ADMIN_PASSWORD (or a random password it prints
+-- once in the log).
 -- ============================================================================
-
-INSERT INTO users (email, name, password_hash, role, company, tenant_id) VALUES
-  ('admin@blacksentinel.ai', 'Super Administrator', '$2a$10$pkJxCyLoV/KI0LKP2YXsiuQLukQSm75Foxd7c4EAW6m6DXuqcGvM6', 'admin', 'BlackSentinel AI', 'default')
-ON CONFLICT (email) DO NOTHING;

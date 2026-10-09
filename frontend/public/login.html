@@ -217,7 +217,7 @@
           localStorage.setItem('bs_user', JSON.stringify(data.user));
           window.location.href = '/app';
         } else {
-          loginError.textContent = data.error?.message || 'Invalid email or password. Try: admin@blacksentinel.ai / Admin123!';
+          loginError.textContent = data.error?.message || 'Invalid email or password.';
           loginError.classList.add('show');
           btnLoginLabel.textContent = 'Sign In';
           btnLogin.classList.remove('is-loading');
