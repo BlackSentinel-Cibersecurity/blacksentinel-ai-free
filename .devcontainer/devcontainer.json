@@ -1,0 +1,30 @@
+{
+  "name": "BlackSentinel AI \u2014 open-source edition",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+  "postCreateCommand": "if [ -f scripts/init-env.sh ]; then bash scripts/init-env.sh; fi",
+  "postStartCommand": "docker compose -f docker-compose.yml up -d --build",
+  "forwardPorts": [
+    3000
+  ],
+  "portsAttributes": {
+    "3000": {
+      "label": "BlackSentinel AI",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "README.md"
+      ]
+    }
+  }
+}
