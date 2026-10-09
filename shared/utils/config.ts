@@ -16,8 +16,9 @@ const ConfigSchema = z.object({
   HOST: z.string().default('0.0.0.0'),
   LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal']).default('info'),
 
-  JWT_SECRET: z.string().min(32),
-  ENCRYPTION_KEY: z.string().min(32),
+  // A value copied from .env.example is long enough but public: reject it.
+  JWT_SECRET: z.string().min(32).refine((v) => !/change_?me|change|your[-_]|example|placeholder/i.test(v), 'JWT_SECRET is still a placeholder; run scripts/init-env.sh'),
+  ENCRYPTION_KEY: z.string().min(32).refine((v) => !/change_?me|change|your[-_]|example|placeholder/i.test(v), 'ENCRYPTION_KEY is still a placeholder; run scripts/init-env.sh'),
 
   REDIS_URL: z.string().url().default('redis://localhost:6379'),
   NEO4J_URL: z.string().default('bolt://localhost:7687'),
