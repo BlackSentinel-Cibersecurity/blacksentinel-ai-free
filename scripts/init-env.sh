@@ -14,7 +14,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ENV_FILE="$ROOT/.env"
 EXAMPLE="$ROOT/.env.example"
 # KEY:bytes — each becomes 2×bytes hex characters.
-KEYS=(JWT_SECRET:32 ENCRYPTION_KEY:32 ADMIN_PASSWORD:12)
+KEYS=(JWT_SECRET:32 ENCRYPTION_KEY:32 ADMIN_PASSWORD:12 POSTGRES_PASSWORD:24 GRAFANA_ADMIN_PASSWORD:12)
 
 rand_hex() {
   if command -v openssl >/dev/null 2>&1; then openssl rand -hex "$1"
